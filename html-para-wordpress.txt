@@ -1,0 +1,109 @@
+1 - Copiar a pasta do site para wp-contente/themes/
+
+2 - Mudar o index.html para index.php
+
+3 - Colocar/criar o arquivo style.css na raiz do tema
+
+4 - adicionar a descrição do tema no topo do style.css
+/* - exemplo -
+Theme Name: Rest
+Theme URI: http://rest.com
+Author: André Rafael
+Author URI: http://origamid.com/
+Description: Tema criado para o restaurante Rest
+Version: 1.0
+*/
+
+5 - ativar o tema no Wordpress
+
+6 -  Corrigir o caminho do style.css e outros caminhos se necessário
+<?php echo get_stylesheet_directory_uri(); ?>
+essa função adiciona o caminho até a raiz do tema
+
+7 - separar o header e footer em arquivos header.php e footer.php
+adicionar antes de fechar o head: <?php wp_head();?>
+adicionar antes de fechar o footer: <?php wp_footer();?>
+adicionar o header e footer nas paginas do site e muda-las para .php com <?php het_header(); ?> e <?php get footer();?>
+
+8 - Começar a substituir o conteúdo por funções de Wordpress
+
+<php bloginfo('name'); ?>
+mostra o nome do blog
+
+9 - Adicionar as paginas na interface do Wordpress
+
+10 - adicionar as paginas em html, em templates de Páginas.
+A página index.ph deve estar resevada para conteudo generico.
+Adicionar o nome page- na frente de cada template de pagina para facilitar organização.
+<?php
+//template Name: sobre
+?>
+
+11 - adicionar o lopp
+O loop é utilizada para mostrar o conteúdo dos post,ele é inteligente o suficiente para saber se precisa mostrar apenas um ou uma sequência.
+<?php if have_posts()) :while (have_posts()) : the_post();?>
+ <?php the_title();?>
+<?php the_content();?>
+//Aqui vai o conteúdo
+
+<?php endwhile; else?>
+<p><?php -e('Sorry, no posts matched your criteria');?><p>
+<?php endif; ?>
+
+12 - Advanced Custom FIELDs //CMB2
+
+Adicionar o Plugin Advanced Custom Fields por(Nota: O Pro é pago e só pode ser utilizado nos arquivos do curso).
+(existem alternativas, mas a lógica é a mesma)
+
+Iniciar a troca do conteúdo por fields, <?php the_field('nome_do_conteudo'); ?>
+Adicionar o conteúdo a interface do Custom Fields.
+
+13 - Repeater Fields
+<?php if(have_rows('nomedorepeater')):while(have_rows('nomedorepeater')) :the_row(); ?>
+  the_sub_fields('nomedocampo');
+
+<?php endwhile; else : endif; ?>  
+
+14 - Pegar valores de outras Páginas, reutilização de campos de outras páginas
+<?php 
+   $contato = get_page_by_title('contato');
+   the_field('telefone', $contato);
+?>
+
+15 - Terminar de adicionar outros campos
+  <?php echo date("Y"); ?> (mostrar a data)
+
+  16 -  Adicionar campos para SEO
+  <title><?php bloginfo('name');?> - <?php wp_title('');?> <?php the_field('title_seo'); ?> </title>
+  <meta name="description" content="<?php bloginfo('name')";?> - <?php wp_title(''); ?> <?php the_field('description_seo'); ?>">
+
+  17 - Adicionar o Functions.php
+  //Habilitar Menus
+  add_theme_support('menus');
+
+  //Funções para Limpar o header
+  remove_action('wp_head', 'rds_link');
+  remove_action('wp_head', 'wlwmanifest_link');
+  remove_action('wp_head', 'star_posts_rel_link', 10, 0);
+  remove_action('wp_head', 'adjacent_posts_link_wp_head, 10, 0');
+  remove_action('wp_head', 'feed_links_extra', 3);
+  remove_action('wp_head', 'wp_generator');
+
+  18 - adicionar Menu
+
+  //Habilitar Menus 
+  add_theme_support('menus');
+
+   //função para mais de um menu
+ function register_my_menu() {
+  register_nav_menu('header-menu', __('Header Menu'));
+}
+add_action('init', 'register_my_menu')
+
+ <?php 
+		$args = array(
+		  'menu' => 'principal',
+			'container' => false
+		);
+		wp_nav_menu($args);
+	?>
